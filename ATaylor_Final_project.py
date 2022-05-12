@@ -64,3 +64,5 @@ def main():
             input("Please enter in 1 or 2 to coninute: ")
 
 main()
+
+#Still working on this need to add comments and figure out why it can't keep on repeating past 3 times
