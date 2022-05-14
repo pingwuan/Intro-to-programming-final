@@ -5,30 +5,40 @@
 #importing required modules
 import requests, json
 
-
+#City function for user input of city name or zipcode
 def city():
         city_name = input("Enter City name or zip code: ")
         return city_name
-
+        
+#Connection Function connects to open weather api
 def connection():
     api_key = "819e6d736ad9bce76f7cbda94656ed07"
 
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
 
     complete_url = base_url + "appid=" + api_key + "&q=" + city()
- 
-    response = requests.get(complete_url)
- 
-    x = response.json()
-    return x
 
+    #Try block to deterimine if internet connection is successful or not
+    try:
+        response = requests.get(complete_url)
+        try:
+            print("Connection Successful")
+            x = response.json()
+            return x
+        except:
+            print("Something went wrong with JSON")
+    except:
+        print("Connection Failed, Please check your internet connection!")
+
+#Weather function Takes Json data from connection function and formats it into a legiable format
+#Also validates the user's city field
 def weather():
     x = connection()
     if x["cod"] != "404":
 
         y = x["main"]
  
-        current_temperature = y["temp"]
+        current_temperature = round(y["temp"] * 1.8 - 459.67)
  
         current_pressure = y["pressure"]
  
@@ -38,7 +48,7 @@ def weather():
 
         weather_description = z[0]["description"]
  
-        print(" Temperature (in kelvin unit) = " +
+        print(" Temperature (in Fahrenheit) = " +
                         str(current_temperature) +
             "\n atmospheric pressure (in hPa unit) = " +
                         str(current_pressure) +
@@ -48,21 +58,20 @@ def weather():
                         str(weather_description))
  
     else:
-        print(" City Not Found enter another City ")
+        print("City or Zip Not Found enter another City or Zip!")
 
+#Main function that makes calls to all the other functions
 def main():
-    options_list = ["1", "2"]
+    options_list = ["1", "2", "3", "4", "5"] 
     print("Welcome to Alexander's Weather exchange!")
     for x_main in options_list:
-        x_main = input("Please enter 1 to begin find the weather or 2 to exit!: ")
+        x_main = input("Please enter 1 to begin finding the weather or 2 to exit!: ")
         if x_main == "1":
-            print(weather())
-            continue
+            weather()
         elif x_main == "2":
             break
         elif x_main != options_list:
-            input("Please enter in 1 or 2 to coninute: ")
+            input("You must pick 1 or 2 hit enter to continue: ")
 
+#Start of call
 main()
-
-#Still working on this need to add comments and figure out why it can't keep on repeating past 3 times
